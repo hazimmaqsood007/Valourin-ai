@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -24,7 +24,8 @@ interface Destination {
 const TRAVEL_TYPES = ['Beach', 'Mountain', 'City', 'Nature', 'Adventure', 'Honeymoon', 'Safari', 'Cruise'];
 const AMENITIES_LIST = ['Pool', 'WiFi', 'Spa', 'Gym', 'Bar', 'Hiking', 'Breakfast', 'Parking', 'Ocean View', 'Pet Friendly'];
 
-export default function DestinationsPage() {
+// --- 1. THE MAIN LOGIC COMPONENT ---
+function DestinationsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -146,15 +147,13 @@ export default function DestinationsPage() {
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-900 flex flex-col">
       
-      {/* ========================================= */}
-      {/* 1. NAVIGATION BAR                         */}
-      {/* ========================================= */}
+      {/* 1. NAVIGATION BAR */}
       <nav className="bg-white border-b border-gray-200 px-4 py-4 sticky top-0 z-50 shadow-sm transition-all">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           
           <Link href="/" className="flex items-center gap-2 group hover:opacity-80 transition">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm group-hover:bg-blue-700">V</div>
-            <span className="text-xl font-bold tracking-tight">Valourin<span className="text-blue-600">AI</span></span>
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm group-hover:bg-blue-700">T</div>
+            <span className="text-xl font-bold tracking-tight">Trip<span className="text-blue-600">AI</span></span>
           </Link>
 
           <div className="hidden md:flex flex-1 max-w-md mx-8">
@@ -190,9 +189,7 @@ export default function DestinationsPage() {
         </div>
       </nav>
 
-      {/* ========================================= */}
-      {/* 2. HERO HEADER                            */}
-      {/* ========================================= */}
+      {/* 2. HERO HEADER */}
       <header className="bg-blue-600 text-white pt-12 pb-24 px-4 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-blue-600 to-indigo-800 opacity-90"></div>
         {/* Decorative Circles */}
@@ -227,9 +224,7 @@ export default function DestinationsPage() {
         </div>
       </header>
 
-      {/* ========================================= */}
-      {/* 3. MAIN CONTENT AREA                      */}
-      {/* ========================================= */}
+      {/* 3. MAIN CONTENT AREA */}
       <div className="max-w-7xl mx-auto px-4 w-full flex-1 flex flex-col lg:flex-row gap-8 -mt-16 pb-20 relative z-20">
         
         {/* Mobile Filter Toggle */}
@@ -243,9 +238,7 @@ export default function DestinationsPage() {
           </button>
         </div>
 
-        {/* ----------------------------------- */}
-        {/* SIDEBAR FILTERS                     */}
-        {/* ----------------------------------- */}
+        {/* SIDEBAR FILTERS */}
         <aside className={`w-full lg:w-72 flex-shrink-0 ${mobileFiltersOpen ? 'block' : 'hidden'} lg:block transition-all duration-300`}>
           <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-xl sticky top-24 h-auto max-h-[calc(100vh-120px)] overflow-y-auto custom-scrollbar">
             
@@ -348,9 +341,7 @@ export default function DestinationsPage() {
           </div>
         </aside>
 
-        {/* ----------------------------------- */}
-        {/* MAIN LISTINGS AREA                  */}
-        {/* ----------------------------------- */}
+        {/* MAIN LISTINGS AREA */}
         <main className="flex-1">
           
           {/* Sorting Bar */}
@@ -528,16 +519,14 @@ export default function DestinationsPage() {
         </main>
       </div>
 
-      {/* ========================================= */}
-      {/* 4. FOOTER                                 */}
-      {/* ========================================= */}
+      {/* 4. FOOTER */}
       <footer className="bg-gray-900 text-gray-400 py-16 border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           
           <div>
             <span className="text-2xl font-bold text-white block mb-4 flex items-center gap-2">
-                <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-xs">V</div>
-                Valourin<span className="text-blue-500">AI</span>
+                <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-xs">T</div>
+                Trip<span className="text-blue-500">AI</span>
             </span>
             <p className="text-sm leading-relaxed opacity-80">
               We are revolutionizing the way people travel by combining advanced AI with real-time travel data.
@@ -579,7 +568,7 @@ export default function DestinationsPage() {
         </div>
         
         <div className="max-w-7xl mx-auto px-4 border-t border-gray-800 pt-8 text-center text-sm flex flex-col md:flex-row justify-between items-center gap-4">
-          <span>&copy; 2025 Valourin Inc. All rights reserved.</span>
+          <span>&copy; 2025 TripAI Inc. All rights reserved.</span>
           <div className="flex items-center gap-6">
              <Link href="#" className="hover:text-white transition">Twitter</Link>
              <Link href="#" className="hover:text-white transition">Instagram</Link>
@@ -589,5 +578,18 @@ export default function DestinationsPage() {
       </footer>
 
     </div>
+  );
+}
+
+// --- 2. WRAPPER COMPONENT FOR SUSPENSE ---
+export default function DestinationsPage() {
+  return (
+    <Suspense fallback={
+        <div className="min-h-screen flex items-center justify-center bg-gray-50">
+            <div className="animate-spin w-8 h-8 border-4 border-gray-300 border-t-blue-600 rounded-full"></div>
+        </div>
+    }>
+        <DestinationsContent />
+    </Suspense>
   );
 }
