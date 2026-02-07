@@ -11,6 +11,9 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  
+  // NEW: Mobile Menu State
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Search State
   const [searchData, setSearchData] = useState({
@@ -19,9 +22,9 @@ export default function Home() {
     budget: 'moderate'
   });
 
-  // --- EFFECT: AUTH & SCROLL ---
+  // --- EFFECTS ---
   useEffect(() => {
-    // 1. Check Login Status
+    // 1. Auth Check
     const user = localStorage.getItem('user');
     const admin = localStorage.getItem('isAdmin');
     
@@ -31,7 +34,7 @@ export default function Home() {
         setIsAdmin(true);
     }
 
-    // 2. Handle Navbar Scroll Effect
+    // 2. Scroll Listener
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
@@ -39,11 +42,8 @@ export default function Home() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // --- HANDLERS ---
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you'd pass these query params to the listing page
-    console.log("Searching for:", searchData);
     router.push('/destinations');
   };
 
@@ -55,26 +55,26 @@ export default function Home() {
       {/* ========================================= */}
       <nav 
         className={`fixed w-full z-50 transition-all duration-300 ${
-          isScrolled ? 'bg-white/95 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'
+          isScrolled || mobileMenuOpen ? 'bg-white/95 backdrop-blur-md shadow-sm py-4' : 'bg-transparent py-6'
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
+          <Link href="/" className="flex items-center gap-2 group z-50">
             <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-lg transition-colors ${
-              isScrolled ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'
+              isScrolled || mobileMenuOpen ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'
             }`}>
-              V
+              T
             </div>
             <span className={`text-xl font-bold tracking-tight transition-colors ${
-              isScrolled ? 'text-gray-900' : 'text-white'
+              isScrolled || mobileMenuOpen ? 'text-gray-900' : 'text-white'
             }`}>
-              Valourin<span className={isScrolled ? 'text-blue-600' : 'text-blue-200'}>AI</span>
+              Trip<span className={(isScrolled || mobileMenuOpen) ? 'text-blue-600' : 'text-blue-200'}>AI</span>
             </span>
           </Link>
           
-          {/* Desktop Menu */}
+          {/* --- DESKTOP MENU (Hidden on Mobile) --- */}
           <div className="hidden md:flex items-center gap-8">
             {['Destinations', 'Packages', 'About'].map((item) => (
               <Link 
@@ -97,8 +97,8 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Auth Button */}
-          <div>
+          {/* --- DESKTOP AUTH BUTTON (Hidden on Mobile) --- */}
+          <div className="hidden md:block">
             {isLoggedIn ? (
               <Link 
                 href={isAdmin ? "/admin" : "/dashboard"}
@@ -123,6 +123,57 @@ export default function Home() {
               </Link>
             )}
           </div>
+
+          {/* --- MOBILE HAMBURGER BUTTON (Visible on Mobile) --- */}
+          <button 
+            className="md:hidden z-50 p-2 focus:outline-none"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <div className={`w-6 h-0.5 mb-1.5 transition-all duration-300 ${mobileMenuOpen ? 'rotate-45 translate-y-2 bg-gray-900' : (isScrolled ? 'bg-gray-900' : 'bg-white')}`}></div>
+            <div className={`w-6 h-0.5 mb-1.5 transition-all duration-300 ${mobileMenuOpen ? 'opacity-0' : (isScrolled ? 'bg-gray-900' : 'bg-white')}`}></div>
+            <div className={`w-6 h-0.5 transition-all duration-300 ${mobileMenuOpen ? '-rotate-45 -translate-y-2 bg-gray-900' : (isScrolled ? 'bg-gray-900' : 'bg-white')}`}></div>
+          </button>
+        </div>
+
+        {/* --- MOBILE MENU OVERLAY --- */}
+        <div className={`md:hidden absolute top-full left-0 w-full bg-white shadow-xl border-t border-gray-100 transition-all duration-300 ease-in-out overflow-hidden ${mobileMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+            <div className="flex flex-col p-6 space-y-4">
+                {['Destinations', 'Packages', 'About'].map((item) => (
+                  <Link 
+                    key={item} 
+                    href="/destinations" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-lg font-bold text-gray-700 hover:text-blue-600"
+                  >
+                    {item}
+                  </Link>
+                ))}
+                <Link 
+                    href="/planner" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-lg font-bold text-indigo-600 flex items-center gap-2"
+                >
+                    AI Planner ✨
+                </Link>
+                <div className="h-px bg-gray-100 my-2"></div>
+                {isLoggedIn ? (
+                  <Link 
+                    href={isAdmin ? "/admin" : "/dashboard"}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="bg-gray-900 text-white text-center py-3 rounded-xl font-bold"
+                  >
+                    Go to {isAdmin ? 'Admin Panel' : 'Dashboard'}
+                  </Link>
+                ) : (
+                  <Link 
+                    href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="bg-blue-600 text-white text-center py-3 rounded-xl font-bold"
+                  >
+                    Login / Sign Up
+                  </Link>
+                )}
+            </div>
         </div>
       </nav>
 
@@ -148,7 +199,7 @@ export default function Home() {
             <span className="inline-block py-1 px-4 rounded-full bg-white/20 border border-white/30 text-white text-xs font-bold mb-6 backdrop-blur-md uppercase tracking-wider">
               🚀 The Future of Travel Planning
             </span>
-            <h1 className="text-5xl md:text-7xl font-extrabold text-white mb-6 leading-tight drop-shadow-lg">
+            <h1 className="text-4xl md:text-7xl font-extrabold text-white mb-6 leading-tight drop-shadow-lg">
               Plan your dream trip <br className="hidden md:block"/> 
               with <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300">Artificial Intelligence</span>
             </h1>
@@ -244,7 +295,7 @@ export default function Home() {
       {/* ========================================= */}
       <section className="py-24 bg-gray-50 border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <span className="text-blue-600 font-bold tracking-wider text-xs uppercase mb-2 block">Why Choose Valourin</span>
+          <span className="text-blue-600 font-bold tracking-wider text-xs uppercase mb-2 block">Why Choose TripAI</span>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-16">Travel Planning Reimagined</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
@@ -330,8 +381,8 @@ export default function Home() {
           
           <div>
             <Link href="/" className="flex items-center gap-2 mb-6">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">V</div>
-                <span className="text-2xl font-bold text-white">Valourin<span className="text-blue-500">AI</span></span>
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">T</div>
+                <span className="text-2xl font-bold text-white">Trip<span className="text-blue-500">AI</span></span>
             </Link>
             <p className="text-sm leading-relaxed opacity-80">
               Revolutionizing travel with advanced AI. We help you explore the world smarter, faster, and cheaper.
@@ -377,7 +428,7 @@ export default function Home() {
         {/* Footer Bottom */}
         <div className="max-w-7xl mx-auto px-6 border-t border-gray-800 pt-8 text-center text-sm flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2">
-            <span>&copy; 2025 Valourin Inc. All rights reserved.</span>
+            <span>&copy; 2025 TripAI Inc. All rights reserved.</span>
             {/* SECRET ADMIN ACCESS: Hidden visual cue */}
             <Link href="/login" className="opacity-20 hover:opacity-100 transition-opacity duration-300 text-gray-500 hover:text-white" title="Admin Login">
                 <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
