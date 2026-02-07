@@ -152,8 +152,8 @@ function DestinationsContent() {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           
           <Link href="/" className="flex items-center gap-2 group hover:opacity-80 transition">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm group-hover:bg-blue-700">T</div>
-            <span className="text-xl font-bold tracking-tight">Trip<span className="text-blue-600">AI</span></span>
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm group-hover:bg-blue-700">V</div>
+            <span className="text-xl font-bold tracking-tight">Valourin<span className="text-blue-600">AI</span></span>
           </Link>
 
           <div className="hidden md:flex flex-1 max-w-md mx-8">
@@ -525,8 +525,8 @@ function DestinationsContent() {
           
           <div>
             <span className="text-2xl font-bold text-white block mb-4 flex items-center gap-2">
-                <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-xs">T</div>
-                Trip<span className="text-blue-500">AI</span>
+                <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center text-xs">V</div>
+                Valourin<span className="text-blue-500">AI</span>
             </span>
             <p className="text-sm leading-relaxed opacity-80">
               We are revolutionizing the way people travel by combining advanced AI with real-time travel data.
@@ -568,7 +568,7 @@ function DestinationsContent() {
         </div>
         
         <div className="max-w-7xl mx-auto px-4 border-t border-gray-800 pt-8 text-center text-sm flex flex-col md:flex-row justify-between items-center gap-4">
-          <span>&copy; 2025 TripAI Inc. All rights reserved.</span>
+          <span>&copy; 2025 Valourin Inc. All rights reserved.</span>
           <div className="flex items-center gap-6">
              <Link href="#" className="hover:text-white transition">Twitter</Link>
              <Link href="#" className="hover:text-white transition">Instagram</Link>
