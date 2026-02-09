@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { USERS_DB, User } from '@/app/lib/store';
+import dbConnect from '@/app/lib/db';
+import { UserModel } from '@/app/lib/models';
 
 // Helper to simulate token generation (JWT Mock)
 const generateMockToken = (id: number | string) => {
@@ -8,6 +9,7 @@ const generateMockToken = (id: number | string) => {
 
 export async function POST(req: Request) {
   try {
+    await dbConnect();
     const body = await req.json();
     const { name, email, password } = body;
 
@@ -27,8 +29,8 @@ export async function POST(req: Request) {
     }
 
     // --- 2. Duplicate Check ---
-    const existingUser = USERS_DB.find((u) => u.email.toLowerCase() === email.toLowerCase());
-    
+    const existingUser = await UserModel.findOne({ email: email.toLowerCase() });
+
     if (existingUser) {
       return NextResponse.json(
         { error: "User with this email already exists." },
@@ -37,25 +39,22 @@ export async function POST(req: Request) {
     }
 
     // --- 3. User Creation ---
-    const newUser: User = {
-      id: Date.now(),
+    const newUser = await UserModel.create({
+      id: Date.now(), // Generate a numeric ID for compatibility
       name,
       email,
       password, // In prod, use bcrypt.hash(password)
-      role: 'user', // Default role
+      role: 'user',
       status: 'Active',
       walletBalance: 500, // ✨ Welcome Bonus logic
       joinedAt: new Date().toISOString().split('T')[0],
       avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&color=fff`
-    };
-
-    // Save to Memory DB
-    USERS_DB.push(newUser);
+    });
 
     // --- 4. Response Preparation ---
-    // Remove sensitive password from response
+    const userObject = newUser.toObject();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...userWithoutPassword } = newUser;
+    const { password: _, _id, __v, ...userWithoutPassword } = userObject;
 
     return NextResponse.json({
       success: true,

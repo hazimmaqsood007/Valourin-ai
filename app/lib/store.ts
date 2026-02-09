@@ -68,17 +68,6 @@ export interface Booking {
 }
 
 // ============================================================================
-// 2. GLOBAL STORE SETUP (PERSISTENCE FIX)
-// ============================================================================
-
-// We attach data to `globalThis` so it survives Hot Module Reloads in Next.js dev mode
-const globalStore = globalThis as unknown as {
-  USERS_DB: User[];
-  DESTINATIONS_DB: Destination[];
-  BOOKINGS_DB: Booking[];
-};
-
-// ============================================================================
 // 3. INITIAL SEED DATA
 // ============================================================================
 
@@ -108,16 +97,16 @@ const INITIAL_USERS: User[] = [
 ];
 
 const INITIAL_DESTINATIONS: Destination[] = [
-  { 
-    id: 101, 
-    name: "Goa Beach Paradise", 
-    country: "India", 
+  {
+    id: 101,
+    name: "Goa Beach Paradise",
+    country: "India",
     type: "Beach",
-    price: 18500, 
-    priceDisplay: "₹18,500", 
-    rating: 4.8, 
+    price: 18500,
+    priceDisplay: "₹18,500",
+    rating: 4.8,
     reviewsCount: 342,
-    image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&q=80", 
+    image: "https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&q=80",
     gallery: ["https://images.unsplash.com/photo-1544234033-d922650ee47b?w=800"],
     description: "Experience the perfect blend of Portuguese culture and Indian heritage. Our AI has curated a mix of hidden beaches, vibrant night markets, and historical forts just for you.",
     amenities: ["WiFi", "Pool", "Beach Access", "Bar", "Spa"],
@@ -131,16 +120,16 @@ const INITIAL_DESTINATIONS: Destination[] = [
     ],
     isFeatured: true
   },
-  { 
-    id: 102, 
-    name: "Manali Snow Peaks", 
-    country: "India", 
+  {
+    id: 102,
+    name: "Manali Snow Peaks",
+    country: "India",
     type: "Mountain",
-    price: 12999, 
-    priceDisplay: "₹12,999", 
-    rating: 4.6, 
+    price: 12999,
+    priceDisplay: "₹12,999",
+    rating: 4.6,
     reviewsCount: 128,
-    image: "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&q=80", 
+    image: "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&q=80",
     gallery: [],
     description: "Snow-capped mountains, river adventures, and cozy cafes await you in Manali.",
     amenities: ["Heater", "Bonfire", "Trekking Guide"],
@@ -152,16 +141,16 @@ const INITIAL_DESTINATIONS: Destination[] = [
       { day: 3, title: "Departure", activities: ["Mall Road", "Bus to Delhi"] }
     ]
   },
-  { 
-    id: 103, 
-    name: "Royal Jaipur", 
-    country: "India", 
+  {
+    id: 103,
+    name: "Royal Jaipur",
+    country: "India",
     type: "City",
-    price: 9500, 
-    priceDisplay: "₹9,500", 
-    rating: 4.5, 
+    price: 9500,
+    priceDisplay: "₹9,500",
+    rating: 4.5,
     reviewsCount: 512,
-    image: "https://images.unsplash.com/photo-1477587458883-47145ed94245?w=800&q=80", 
+    image: "https://images.unsplash.com/photo-1477587458883-47145ed94245?w=800&q=80",
     gallery: [],
     description: "The Pink City offers a royal experience with its majestic forts and palaces.",
     amenities: ["Heritage Stay", "Guide", "Cultural Show"],
@@ -182,15 +171,15 @@ const INITIAL_DESTINATIONS: Destination[] = [
     priceDisplay: "₹22,000",
     rating: 4.9,
     reviewsCount: 89,
-    image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800&q=80", 
+    image: "https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800&q=80",
     gallery: [],
     description: "Relax in a luxury houseboat as you cruise through the serene backwaters of Alleppey.",
     amenities: ["Houseboat", "Ayurvedic Spa", "All Meals"],
     inclusions: ["Houseboat Stay", "All Meals", "Canoe Ride"],
     exclusions: ["Airfare", "Massage"],
     itinerary: [
-        { day: 1, title: "Alleppey", activities: ["Check-in Houseboat", "Lunch on Board"] },
-        { day: 2, title: "Cruise", activities: ["Village Walk", "Sunset Cruise"] }
+      { day: 1, title: "Alleppey", activities: ["Check-in Houseboat", "Lunch on Board"] },
+      { day: 2, title: "Cruise", activities: ["Village Walk", "Sunset Cruise"] }
     ]
   },
   {
@@ -209,10 +198,10 @@ const INITIAL_DESTINATIONS: Destination[] = [
     inclusions: ["Villa Stay", "Floating Breakfast", "Airport Transfers"],
     exclusions: ["Flights", "Visa", "Lunch"],
     itinerary: [
-        { day: 1, title: "Arrival", activities: ["Airport Pickup", "Villa Check-in"] },
-        { day: 2, title: "Ubud Tour", activities: ["Monkey Forest", "Rice Terraces"] },
-        { day: 3, title: "Nusa Penida", activities: ["Speedboat", "Kelingking Beach"] },
-        { day: 4, title: "Departure", activities: ["Souvenir Shopping", "Airport Drop"] }
+      { day: 1, title: "Arrival", activities: ["Airport Pickup", "Villa Check-in"] },
+      { day: 2, title: "Ubud Tour", activities: ["Monkey Forest", "Rice Terraces"] },
+      { day: 3, title: "Nusa Penida", activities: ["Speedboat", "Kelingking Beach"] },
+      { day: 4, title: "Departure", activities: ["Souvenir Shopping", "Airport Drop"] }
     ]
   },
   {
@@ -231,9 +220,9 @@ const INITIAL_DESTINATIONS: Destination[] = [
     inclusions: ["3 Star Hotel", "Seine Cruise Ticket", "Eiffel Access"],
     exclusions: ["Flights", "Visa", "City Tax"],
     itinerary: [
-        { day: 1, title: "Arrival", activities: ["Check-in", "Eiffel Tower Night View"] },
-        { day: 2, title: "Louvre", activities: ["Museum Tour", "Champs-Élysées"] },
-        { day: 3, title: "Departure", activities: ["Montmartre", "Airport Train"] }
+      { day: 1, title: "Arrival", activities: ["Check-in", "Eiffel Tower Night View"] },
+      { day: 2, title: "Louvre", activities: ["Museum Tour", "Champs-Élysées"] },
+      { day: 3, title: "Departure", activities: ["Montmartre", "Airport Train"] }
     ]
   },
   {
@@ -252,10 +241,10 @@ const INITIAL_DESTINATIONS: Destination[] = [
     inclusions: ["4 Star Hotel", "Desert Safari BBQ", "Burj Khalifa Ticket"],
     exclusions: ["Flights", "Visa", "Tourism Dirham"],
     itinerary: [
-        { day: 1, title: "Arrival", activities: ["Airport Pickup", "Dhow Cruise Dinner"] },
-        { day: 2, title: "City Tour", activities: ["Burj Khalifa", "Dubai Mall"] },
-        { day: 3, title: "Desert Safari", activities: ["Dune Bashing", "BBQ Dinner"] },
-        { day: 4, title: "Departure", activities: ["Gold Souk", "Airport Drop"] }
+      { day: 1, title: "Arrival", activities: ["Airport Pickup", "Dhow Cruise Dinner"] },
+      { day: 2, title: "City Tour", activities: ["Burj Khalifa", "Dubai Mall"] },
+      { day: 3, title: "Desert Safari", activities: ["Dune Bashing", "BBQ Dinner"] },
+      { day: 4, title: "Departure", activities: ["Gold Souk", "Airport Drop"] }
     ]
   },
   {
@@ -274,10 +263,10 @@ const INITIAL_DESTINATIONS: Destination[] = [
     inclusions: ["Ryokan Accommodation", "Kaiseki Dinner", "Temple Pass"],
     exclusions: ["Flights", "Visa", "Bullet Train"],
     itinerary: [
-        { day: 1, title: "Arrival", activities: ["Check-in Ryokan", "Gion Walk"] },
-        { day: 2, title: "Arashiyama", activities: ["Bamboo Grove", "Tenryu-ji"] },
-        { day: 3, title: "Fushimi Inari", activities: ["Shrine Hike", "Sake Tasting"] },
-        { day: 4, title: "Departure", activities: ["Kyoto Station", "Train to Osaka"] }
+      { day: 1, title: "Arrival", activities: ["Check-in Ryokan", "Gion Walk"] },
+      { day: 2, title: "Arashiyama", activities: ["Bamboo Grove", "Tenryu-ji"] },
+      { day: 3, title: "Fushimi Inari", activities: ["Shrine Hike", "Sake Tasting"] },
+      { day: 4, title: "Departure", activities: ["Kyoto Station", "Train to Osaka"] }
     ]
   }
 ];
@@ -347,15 +336,6 @@ const INITIAL_BOOKINGS: Booking[] = [
   }
 ];
 
-// ============================================================================
-// 4. INITIALIZATION (Load data into global scope)
-// ============================================================================
-
-if (!globalStore.USERS_DB) globalStore.USERS_DB = INITIAL_USERS;
-if (!globalStore.DESTINATIONS_DB) globalStore.DESTINATIONS_DB = INITIAL_DESTINATIONS;
-if (!globalStore.BOOKINGS_DB) globalStore.BOOKINGS_DB = INITIAL_BOOKINGS;
-
-// Export References for API usage
-export const USERS_DB = globalStore.USERS_DB;
-export const DESTINATIONS_DB = globalStore.DESTINATIONS_DB;
-export const BOOKINGS_DB = globalStore.BOOKINGS_DB;
+export const USERS_DB = INITIAL_USERS;
+export const DESTINATIONS_DB = INITIAL_DESTINATIONS;
+export const BOOKINGS_DB = INITIAL_BOOKINGS;

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { USERS_DB } from '@/app/lib/store';
+import dbConnect from '@/app/lib/db';
+import { UserModel } from '@/app/lib/models';
 
 // Helper to simulate a secure token generation
 const generateMockToken = (id: number | string, role: string) => {
@@ -8,6 +9,7 @@ const generateMockToken = (id: number | string, role: string) => {
 
 export async function POST(req: Request) {
   try {
+    await dbConnect();
     // 1. Parse Request Body
     const body = await req.json();
     const { email, password } = body;
@@ -19,9 +21,6 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-
-    // Simulate Database/Network Delay (300ms) for realism
-    await new Promise((resolve) => setTimeout(resolve, 300));
 
     // 3. ADMIN CHECK (Hardcoded for Demo)
     if (email === 'admin@tripai.com' && password === 'admin123') {
@@ -38,14 +37,16 @@ export async function POST(req: Request) {
       });
     }
 
-    // 4. USER CHECK (Search in Mock DB)
+    // 4. USER CHECK (Search in MongoDB)
     // In a real app, you would hash the password here before comparing
-    const user = USERS_DB.find((u) => u.email === email && u.password === password);
+    const user = await UserModel.findOne({ email, password });
 
     if (user) {
+      const userObject = user.toObject();
       // Remove sensitive data (password) before sending back
-      const { password: _, ...userWithoutPassword } = user;
-      
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password: _, _id, __v, ...userWithoutPassword } = userObject;
+
       return NextResponse.json({
         success: true,
         role: 'user',

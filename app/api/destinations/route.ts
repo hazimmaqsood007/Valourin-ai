@@ -1,78 +1,72 @@
 import { NextResponse } from 'next/server';
-import { DESTINATIONS_DB, Destination } from '@/app/lib/store';
+import dbConnect from '@/app/lib/db';
+import { DestinationModel } from '@/app/lib/models';
 
 /**
  * GET Handler
- * Returns the list of all available destinations.
- * Includes a simulated delay for realistic loading skeleton testing.
+ * Returns the list of all available destinations from MongoDB.
  */
 export async function GET() {
   try {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return NextResponse.json(DESTINATIONS_DB);
+    await dbConnect();
+    const destinations = await DestinationModel.find({});
+    return NextResponse.json(destinations);
   } catch (error) {
+    console.error("Fetch Destinations Error:", error);
     return NextResponse.json({ error: "Failed to fetch data" }, { status: 500 });
   }
 }
 
 /**
  * POST Handler (Admin)
- * Adds a new destination to the database.
- * Auto-fills missing rich data (Itinerary, Amenities) to prevent UI crashes.
+ * Adds a new destination to MongoDB.
  */
 export async function POST(req: Request) {
   try {
+    await dbConnect();
     const body = await req.json();
-    
+
     // --- 1. Validation ---
     if (!body.name || !body.price || !body.country) {
       return NextResponse.json(
-        { error: "Name, Price, and Country are required fields." }, 
+        { error: "Name, Price, and Country are required fields." },
         { status: 400 }
       );
     }
 
     // --- 2. Object Construction ---
-    // We construct a strictly typed Destination object here.
-    const newTrip: Destination = {
-      id: Date.now(),
+    const newTrip = {
+      id: Date.now(), // Consider using MongoDB's _id or a better ID generation strategy
       name: body.name,
       country: body.country,
       price: Number(body.price),
-      // Auto-format currency string
       priceDisplay: `₹${Number(body.price).toLocaleString('en-IN')}`,
-      image: body.image || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80', // Fallback image
+      image: body.image || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80',
       description: body.description || 'Experience an unforgettable journey with our curated travel package.',
-      type: body.type || 'Adventure', // Default category
-      
-      // Default Stats
+      type: body.type || 'Adventure',
       rating: 5.0,
       reviewsCount: 0,
       isFeatured: false,
-      
-      // Rich Data Defaults (Ensure arrays are never null)
       gallery: [],
       amenities: body.amenities || ["WiFi", "Breakfast", "Pool", "Guide"],
       inclusions: ["Accommodation", "Daily Breakfast", "Airport Transfers", "English Speaking Guide"],
       exclusions: ["International Flights", "Personal Expenses", "Travel Insurance"],
-      
-      // Default Itinerary Construction
       itinerary: [
-        { 
-          day: 1, 
-          title: "Arrival & Welcome", 
-          activities: ["Airport Pickup", "Hotel Check-in", "Welcome Drink", "Relaxation"], 
-          meals: ["Dinner"] 
+        {
+          day: 1,
+          title: "Arrival & Welcome",
+          activities: ["Airport Pickup", "Hotel Check-in", "Welcome Drink", "Relaxation"],
+          meals: ["Dinner"]
         },
-        { 
-          day: 2, 
-          title: "City Exploration", 
+        {
+          day: 2,
+          title: "City Exploration",
           activities: ["Guided City Tour", "Local Cuisine Lunch", "Visit Famous Landmarks"],
           meals: ["Breakfast", "Lunch"]
         },
-        { 
-          day: 3, 
-          title: "Departure", 
+        {
+          day: 3,
+          title: "Departure",
           activities: ["Breakfast Buffet", "Souvenir Shopping", "Airport Transfer"],
           meals: ["Breakfast"]
         }
@@ -80,12 +74,12 @@ export async function POST(req: Request) {
     };
 
     // --- 3. Save Data ---
-    DESTINATIONS_DB.push(newTrip);
-    
-    return NextResponse.json({ 
-      success: true, 
+    const createdTrip = await DestinationModel.create(newTrip);
+
+    return NextResponse.json({
+      success: true,
       message: "Destination added successfully!",
-      data: newTrip 
+      data: createdTrip
     });
 
   } catch (error) {
@@ -103,25 +97,26 @@ export async function POST(req: Request) {
  */
 export async function DELETE(req: Request) {
   try {
+    await dbConnect();
     const { id } = await req.json();
 
     if (!id) {
       return NextResponse.json({ error: "Trip ID is required." }, { status: 400 });
     }
 
-    const index = DESTINATIONS_DB.findIndex((d) => d.id === Number(id));
-    
-    if (index !== -1) {
-      DESTINATIONS_DB.splice(index, 1);
-      return NextResponse.json({ 
-        success: true, 
-        message: "Trip deleted successfully." 
+    const result = await DestinationModel.deleteOne({ id: Number(id) });
+
+    if (result.deletedCount > 0) {
+      return NextResponse.json({
+        success: true,
+        message: "Trip deleted successfully."
       });
     } else {
       return NextResponse.json({ error: "Trip not found." }, { status: 404 });
     }
 
   } catch (error) {
+    console.error("Delete Trip Error:", error);
     return NextResponse.json({ error: "Delete operation failed." }, { status: 500 });
   }
 }
