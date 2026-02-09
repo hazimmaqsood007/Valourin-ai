@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 // --- TYPES ---
 interface Destination {
   id: number;
+  _id?: string; // MongoDB document ID
   name: string;
   country: string;
   price: number;
