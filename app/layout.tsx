@@ -14,14 +14,14 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "ValourinAI - AI-Powered Travel Planning & Holiday Packages",
-    template: "%s | ValourinAI"
+    default: "Valourin - AI-Powered Travel Planning & Holiday Packages",
+    template: "%s | Valourin"
   },
-  description: "Discover your dream vacation with ValourinAI. AI-powered travel planning, curated holiday packages, and personalized itineraries for beaches, mountains, cities, and more. Book your perfect trip today!",
-  keywords: ["travel", "holiday packages", "AI travel planner", "vacation booking", "destinations", "travel booking", "ValourinAI", "Valourin", "trip planning", "beach holidays", "mountain trips", "city tours"],
-  authors: [{ name: "ValourinAI" }],
-  creator: "ValourinAI",
-  publisher: "ValourinAI",
+  description: "Discover your dream vacation with Valourin. AI-powered travel planning, curated holiday packages, and personalized itineraries for beaches, mountains, cities, and more. Book your perfect trip today!",
+  keywords: ["travel", "holiday packages", "AI travel planner", "vacation booking", "destinations", "travel booking", "Valourin", "Valourin", "trip planning", "beach holidays", "mountain trips", "city tours"],
+  authors: [{ name: "Valourin" }],
+  creator: "Valourin",
+  publisher: "Valourin",
   robots: {
     index: true,
     follow: true,
@@ -36,25 +36,25 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://valourin-ai.vercel.app",
-    siteName: "ValourinAI",
-    title: "ValourinAI - AI-Powered Travel Planning & Holiday Packages",
-    description: "Discover your dream vacation with ValourinAI. AI-powered travel planning, curated holiday packages, and personalized itineraries.",
+    url: "https://www.valourin.com",
+    siteName: "Valourin",
+    title: "Valourin - AI-Powered Travel Planning & Holiday Packages",
+    description: "Discover your dream vacation with Valourin. AI-powered travel planning, curated holiday packages, and personalized itineraries.",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "ValourinAI - AI Travel Planning",
+        alt: "Valourin - AI Travel Planning",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "ValourinAI - AI-Powered Travel Planning",
+    title: "Valourin - AI-Powered Travel Planning",
     description: "Discover your dream vacation with AI-powered travel planning and curated holiday packages.",
     images: ["/og-image.jpg"],
-    creator: "@ValourinAI",
+    creator: "@Valourin",
   },
   viewport: {
     width: "device-width",

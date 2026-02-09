@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
             allow: '/',
             disallow: ['/api/', '/admin/', '/dashboard/'],
         },
-        sitemap: 'https://valourin-ai.vercel.app/sitemap.xml',
+        sitemap: 'https://www.valourin.com/sitemap.xml',
     }
 }
