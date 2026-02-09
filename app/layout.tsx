@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.valourin.com'),
   title: {
     default: "Valourin - AI-Powered Travel Planning & Holiday Packages",
     template: "%s | Valourin"
@@ -22,6 +23,9 @@ export const metadata: Metadata = {
   authors: [{ name: "Valourin" }],
   creator: "Valourin",
   publisher: "Valourin",
+  alternates: {
+    canonical: '/',
+  },
   robots: {
     index: true,
     follow: true,
